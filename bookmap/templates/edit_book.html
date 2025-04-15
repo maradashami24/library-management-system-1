@@ -1,0 +1,166 @@
+<!DOCTYPE html> <!-- Declares the document type as HTML5 -->
+<html>
+<head>
+    <title>Edit Book</title> <!-- Page title shown in browser tab -->
+    <style>
+        /* Basic page styling */
+        body {
+            font-family: Arial, sans-serif; /* Sets font style */
+            margin: 0;                      /* Removes default margin */
+            padding: 20px;                  /* Adds padding around content */
+            background-color: #f4f4f4;      /* Light gray background */
+        }
+
+        /* Header style */
+        h1 {
+            text-align: center; /* Center the header text */
+            color: #333;        /* Dark gray color */
+        }
+
+        /* Styling the form */
+        form {
+            background-color: white;                     /* White background */
+            padding: 50px;                               /* Space inside form */
+            border-radius: 8px;                          /* Rounded corners */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+            max-width: 400px;                            /* Max width */
+            margin: auto;                                /* Center horizontally */
+        }
+
+        /* Label styling */
+        label {
+            font-size: 16px;       /* Font size */
+            margin-bottom: 5px;    /* Space below each label */
+            display: block;        /* Put each label on its own line */
+        }
+
+        /* Input fields styling */
+        input[type="text"], input[type="number"] {
+            padding: 8px;              /* Padding inside inputs */
+            margin-bottom: 10px;       /* Space between fields */
+            width: 100%;               /* Take full width of form */
+            border-radius: 5px;        /* Rounded corners */
+            border: 1px solid #ccc;    /* Light gray border */
+            font-size: 16px;           /* Font size */
+        }
+
+        /* Submit button styling */
+        button {
+            background-color: #2cd9c7; /* Aqua background */
+            border: none;              /* No border */
+            color: white;              /* White text */
+            padding: 10px 20px;        /* Space inside button */
+            font-size: 16px;           /* Font size */
+            cursor: pointer;           /* Pointer on hover */
+            border-radius: 5px;        /* Rounded corners */
+            width: 100%;               /* Full width button */
+        }
+
+        /* Hover effect for button */
+        button:hover {
+            background-color: #29b8b3; /* Slightly darker on hover */
+        }
+
+        /* Centering the form vertically and horizontally */
+        .form-container {
+            display: flex;                /* Flex layout */
+            justify-content: center;      /* Center horizontally */
+            align-items: center;          /* Center vertically */
+            height: 100vh;                /* Full screen height */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container to center the form -->
+    <div class="form-container">
+        <!-- Form for editing book -->
+        <form id="editBookForm">
+            <h1>Edit Book</h1>
+
+            <!-- Hidden field to store book ID -->
+            <input type="hidden" id="bookId">
+
+            <!-- Input for book title -->
+            <label for="title">Title:</label>
+            <input type="text" id="title" required><br>
+
+            <!-- Input for book author -->
+            <label for="author">Author:</label>
+            <input type="text" id="author" required><br>
+
+            <!-- Input for book quantity -->
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" required><br>
+
+            <!-- Submit button -->
+            <button type="submit">Update Book</button>
+        </form>
+    </div>
+
+    <script>
+        // Get token from local storage (saved at login)
+        const token = localStorage.getItem('token');
+
+        // Get book ID from the URL query string (e.g., ?id=3)
+        const bookId = new URLSearchParams(window.location.search).get('id');
+
+        // If token is not present, redirect to signin page
+        if (!token) {
+            window.location.href = '/signin-page/';
+        }
+
+        // Load book details to pre-fill the form fields
+        async function loadBookDetails() {
+            const response = await fetch(`/api/books/${bookId}/`, {
+                headers: {
+                    'Authorization': 'Token ' + token // Add auth token in header
+                }
+            });
+            
+            if (response.ok) {
+                const book = await response.json(); // Parse JSON response
+                document.getElementById('bookId').value = book.id; // Set hidden field
+                document.getElementById('title').value = book.title; // Set title input
+                document.getElementById('author').value = book.author; // Set author input
+                document.getElementById('quantity').value = book.quantity; // Set quantity input
+            } else {
+                alert("Failed to load book details."); // Show error message
+                window.location.href = '/admin-portal/'; // Redirect to admin portal
+            }
+        }
+
+        // Call the function when the page loads
+        loadBookDetails();
+
+        // Handle form submission to update book
+        document.getElementById('editBookForm').addEventListener('submit', async function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const response = await fetch(`/api/books/${bookId}/`, {
+                method: 'PATCH', // Use PATCH to update data
+                headers: {
+                    'Content-Type': 'application/json',       // Send JSON data
+                    'Authorization': 'Token ' + token         // Auth header
+                },
+                body: JSON.stringify({                        // Request body with updated data
+                    title: document.getElementById('title').value,
+                    author: document.getElementById('author').value,
+                    quantity: document.getElementById('quantity').value
+                })
+            });
+
+            const data = await response.json(); // Parse response
+
+            // Show success or error message
+            alert(response.ok ? 'Book updated!' : 'Error: ' + data.detail || JSON.stringify(data));
+
+            // Redirect back if update successful
+            if (response.ok) {
+                window.location.href = '/admin-portal/';
+            }
+        });
+    </script>
+
+</body>
+</html>

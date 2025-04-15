@@ -1,0 +1,216 @@
+<!DOCTYPE html> <!-- Declares the document type as HTML5 -->
+<html>
+<head>
+    <title>Admin Portal</title> <!-- Browser tab title -->
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4; /* Light background */
+        }
+
+        /* Header styles */
+        h2, h3, h4 {
+            color: #333; /* Dark gray text */
+        }
+
+        /* Button styling */
+        button {
+            background-color: #2cd9c7; /* Aqua */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #2cd9c7; /* No change on hover (same color) */
+        }
+
+        /* Input styling */
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        /* Form box styling */
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        h4 {
+            margin-top: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            display: none; /* Hide initially */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2cd9c7;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Zebra striping */
+        }
+
+        .book-actions {
+            margin-top: 10px;
+        }
+
+        a {
+            margin-right: 10px;
+            color: #00ffee;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <h2 style="text-align:center;">Welcome to the Admin Portal</h2>
+
+    <!-- Book adding form -->
+    <h3 style="text-align:center;">Add a new book now! 👇</h3>
+    <form id="addBookForm">
+        Title: <input type="text" id="title" required><br>
+        Author: <input type="text" id="author" required><br>
+        Quantity: <input type="number" id="quantity" required><br>
+        <button type="submit">Add Book</button>
+    </form>
+
+    <!-- Book listing area -->
+    <h2>Books List</h2>
+    <h4>View/Update/Delete existing book records 👇</h4>
+    <button onclick="fetchBooks()">Load Books</button>
+
+    <!-- Table for displaying books -->
+    <table id="bookTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="bookList">
+            <!-- JS will fill this with book rows -->
+        </tbody>
+    </table>
+
+    <!-- Button to go to student view -->
+    <h4>Check what students can view 👇</h4>
+    <button onclick="window.location.href='/student-view/'">Student View</button>
+
+    <script>
+    const token = localStorage.getItem('token'); // Get stored token from login
+
+    // If not authenticated, redirect to login page
+    if (!token) {
+        window.location.href = '/signin-page/';
+    }
+
+    // Handle book form submission (add book)
+    document.getElementById('addBookForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Prevent default form reload
+
+        // Send POST request to add book
+        const response = await fetch('/api/books/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + token
+            },
+            body: JSON.stringify({
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                quantity: document.getElementById('quantity').value
+            })
+        });
+
+        const data = await response.json();
+        alert(response.ok ? 'Book added!' : 'Error: ' + data.detail || JSON.stringify(data));
+        fetchBooks(); // Reload books after adding
+    });
+
+    // Function to fetch all books from backend
+    async function fetchBooks() {
+        const response = await fetch('/api/books/', {
+            headers: {
+                'Authorization': 'Token ' + token
+            }
+        });
+
+        const books = await response.json();
+        const list = document.getElementById('bookList');
+        const table = document.getElementById('bookTable');
+        list.innerHTML = ''; // Clear previous list
+
+        if (books.length > 0) {
+            table.style.display = 'table'; // Show the table if books exist
+        }
+
+        // Create rows for each book
+        books.forEach(book => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.quantity}</td>
+                <td>
+                    <a href="/edit-book/?id=${book.id}">Edit</a>
+                    <button onclick="deleteBook(${book.id})">Delete</button>
+                </td>
+            `;
+
+            list.appendChild(row); // Add row to the table
+        });
+    }
+
+    // Delete book function
+    async function deleteBook(bookId) {
+        const response = await fetch(`/api/books/${bookId}/`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Token ' + token
+            }
+        });
+
+        const data = await response.json();
+        alert(response.ok ? 'Book deleted!' : 'Error: ' + data.detail || JSON.stringify(data));
+        fetchBooks(); // Refresh list after deletion
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Title for the page displayed in the browser tab -->
+    <title>Student View - Book List</title>
+
+    <style>
+        /* Global styles for the body */
+        body {
+            font-family: Arial, sans-serif; /* Sets the font */
+            margin: 0; /* Removes default margin */
+            padding: 20px; /* Adds padding around the content */
+            background-color: #f4f4f4; /* Background color */
+        }
+
+        /* Styles for the header (h2) */
+        h2 {
+            color: #333; /* Text color */
+        }
+
+        /* Table styles */
+        table {
+            width: 100%; /* Table takes up the full width */
+            border-collapse: collapse; /* Removes space between table borders */
+            margin-top: 20px; /* Adds space above the table */
+        }
+
+        /* Styles for table header and cells */
+        th, td {
+            padding: 12px; /* Adds padding to table cells */
+            text-align: left; /* Aligns text to the left */
+            border: 1px solid #ddd; /* Adds a border around cells */
+        }
+
+        /* Header row background color */
+        th {
+            background-color: #2cd9c7; /* Sets the background color */
+            color: white; /* Sets text color */
+        }
+
+        /* Styles for alternating row colors */
+        tr:nth-child() {
+            background-color: #f2f2f2; /* Alternates row color */
+        }
+
+        /* Button styles */
+        button {
+            background-color: #2cd9c7; /* Sets background color for buttons */
+            border: none; /* Removes button border */
+            color: white; /* Sets text color */
+            padding: 10px 20px; /* Adds padding to button */
+            font-size: 16px; /* Sets font size */
+            cursor: pointer; /* Changes cursor to pointer when hovering */
+            border-radius: 5px; /* Rounds the corners of the button */
+            margin: 10px 0; /* Adds margin above and below the button */
+        }
+
+        /* Hover effect for button */
+        button:hover {
+            background-color: #2cd9c7; /* Changes background on hover */
+        }
+
+        /* Container for the table to center it and add styling */
+        .table-container {
+            width: 70%; /* Sets the width of the table container */
+            margin-top: 20px; /* Adds space above the container */
+            background-color: white; /* White background for the table */
+            padding: 20px; /* Adds padding inside the container */
+            border-radius: 8px; /* Rounds the corners of the container */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Adds shadow for better visual appeal */
+        }
+    </style>
+
+    <script>
+        // Function to fetch and display books from the API
+        async function fetchBooks() {
+            const token = localStorage.getItem('token'); // Retrieves the token from localStorage
+            const response = await fetch('/api/books/', { // Sends a GET request to fetch books data
+                headers: {
+                    'Authorization': 'Token ' + token // Adds token for authentication
+                }
+            });
+            const data = await response.json(); // Parses the JSON response
+
+            const tableBody = document.getElementById('book-list-body'); // Gets the table body element
+            tableBody.innerHTML = '';  // Clears any existing content in the table body
+
+            // Loops through each book in the data and creates a new row
+            data.forEach(book => {
+                const row = document.createElement('tr'); // Creates a new row for the table
+                row.innerHTML = `
+                    <td>${book.title}</td>  <!-- Displays the book title -->
+                    <td>${book.author}</td> <!-- Displays the book author -->
+                    <td>${book.quantity}</td> <!-- Displays the book quantity -->
+                `;
+                tableBody.appendChild(row); // Appends the row to the table body
+            });
+        }
+
+        window.onload = fetchBooks; // Calls fetchBooks when the page is loaded
+    </script>
+</head>
+<body>
+    <h2>Student View - Book List</h2>
+
+    <div class="table-container">
+        <!-- Table to display the list of books -->
+        <table>
+            <thead>
+                <!-- Table header with column names -->
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody id="book-list-body">
+                <!-- Table rows will be dynamically added here by the script -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Button to navigate back to the Admin Portal -->
+    <button onclick="window.location.href='/admin-portal/'">Back to Admin Portal</button>
+</body>
+</html>
