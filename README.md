@@ -32,7 +32,7 @@ MySQL Workbench (or MySQL server installed locally)
 2. **Create Virtual Environment (Recommended)**  
    ```bash
    python -m venv venv
-source venv/bin/activate
+   source venv/bin/activate
 
 
 3. **Install Dependencies**  
@@ -55,7 +55,7 @@ source venv/bin/activate
 
 ## please add your mysql details in the above section of settings.py file of librarysys project.
 
-5. **Aplly Migrations**  
+5. **Apply Migrations**  
     ```bash
     python manage.py makemigrations
     python manage.py migrate
@@ -70,25 +70,6 @@ source venv/bin/activate
     python manage.py runserver
 
 
-**Folder Structure**
-    ```bash
-    librarysys/
-    ├── bookmap/
-    │   ├── migrations/
-    │   ├── templates/
-    │   │   ├── admin_portal.html
-    │   │   ├── edit_book.html
-    │   │   ├── sign_in.html
-    │   │   ├── sign_up.html
-    │   │   ├── student_view.html
-    │   │   └── index.html
-    │   ├── views.py
-    │   ├── models.py
-    │   ├── urls.py
-    │   └── serializers.py
-    ├── librarysys/
-    │   └── settings.py
-    ├── manage.py
-    └── requirements.txt
+
 
 
