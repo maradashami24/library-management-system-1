@@ -26,68 +26,69 @@ MySQL Workbench (or MySQL server installed locally)
 
 1. **Clone the repository**  
    ```bash
-   git clone https://github.com/your-username/library-management-system.git
-   cd library-management-system
+   git clone https://github.com/maradashami24/library-management-system-1.git
+### Make Sure you are in Librarysys folder
 
-### 2. Create & Activate Virtual Environment (Recommended)
-```bash
-python -m venv venv
-source venv/bin/activate   # On Windows use: venv\Scripts\activate
-
-### 3. Install Dependencies
-```bash
-pip install -r requirements.txt
+2. **Create Virtual Environment (Recommended)**  
+   ```bash
+   python -m venv venv
+source venv/bin/activate
 
 
-### 4. Database Configuration - Ensure MySQL is installed and running. Then, configure the database settings in settings.py Update the DATABASES section with your MySQL credentials
-```bash
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Using MySQL as the backend
-        'NAME': 'bookmap_db',                 # Your DB name
-        'USER': 'root',                       # DB username
-        'PASSWORD': 'jyothi1977',             # DB password
-        'HOST': '127.0.0.1',                  # DB host (localhost)
-        'PORT': '3306',                       # Default MySQL port
+3. **Install Dependencies**  
+    ```bash
+    pip install -r requirements.txt
+
+
+4. **Database Configuration - Ensure MySQL is installed and running. Then, configure the database settings in settings.py Update the DATABASES section with your MySQL credentials**
+    ```bash
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',  # Using MySQL as the backend
+            'NAME': 'bookmap_db',                 # Your DB name
+            'USER': 'root',                       # DB username
+            'PASSWORD': 'jyothi1977',             # DB password
+            'HOST': '127.0.0.1',                  # DB host (localhost)
+            'PORT': '3306',                       # Default MySQL port
+        }
     }
-}
 
 ## please add your mysql details in the above section of settings.py file of librarysys project.
 
-### 5. Apply Migrations
-```bash
-python manage.py makemigrations
-python manage.py migrate
+5. **Aplly Migrations**  
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
 
 
-### 6. Create SuperUser (For Admin Access) - (OPTIONAL)
-```bash
+6. **Create SuperUser (For Admin Access) - (OPTIONAL)**
+    ```bash
     python manage.py createsuperuser
 
-### 7. Run Development Server
-```bash
-python manage.py runserver
+7. **Run Development Server**
+    ```bash
+    python manage.py runserver
 
 
-### Folder Structure
-```bash
-librarysys/
-├── bookmap/
-│   ├── migrations/
-│   ├── templates/
-│   │   ├── admin_portal.html
-│   │   ├── edit_book.html
-│   │   ├── sign_in.html
-│   │   ├── sign_up.html
-│   │   ├── student_view.html
-│   │   └── index.html
-│   ├── views.py
-│   ├── models.py
-│   ├── urls.py
-│   └── serializers.py
-├── librarysys/
-│   └── settings.py
-├── manage.py
-└── requirements.txt
+**Folder Structure**
+    ```bash
+    librarysys/
+    ├── bookmap/
+    │   ├── migrations/
+    │   ├── templates/
+    │   │   ├── admin_portal.html
+    │   │   ├── edit_book.html
+    │   │   ├── sign_in.html
+    │   │   ├── sign_up.html
+    │   │   ├── student_view.html
+    │   │   └── index.html
+    │   ├── views.py
+    │   ├── models.py
+    │   ├── urls.py
+    │   └── serializers.py
+    ├── librarysys/
+    │   └── settings.py
+    ├── manage.py
+    └── requirements.txt
 
 
