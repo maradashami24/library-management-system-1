@@ -30,14 +30,17 @@ MySQL Workbench (or MySQL server installed locally)
    cd library-management-system
 
 ### 2. Create & Activate Virtual Environment (Recommended)
+```bash
 python -m venv venv
 source venv/bin/activate   # On Windows use: venv\Scripts\activate
 
 ### 3. Install Dependencies
+```bash
 pip install -r requirements.txt
 
 
 ### 4. Database Configuration - Ensure MySQL is installed and running. Then, configure the database settings in settings.py Update the DATABASES section with your MySQL credentials
+```bash
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Using MySQL as the backend
@@ -52,19 +55,22 @@ DATABASES = {
 ## please add your mysql details in the above section of settings.py file of librarysys project.
 
 ### 5. Apply Migrations
+```bash
 python manage.py makemigrations
 python manage.py migrate
 
 
 ### 6. Create SuperUser (For Admin Access) - (OPTIONAL)
+```bash
     python manage.py createsuperuser
 
 ### 7. Run Development Server
+```bash
 python manage.py runserver
 
 
 ### Folder Structure
-
+```bash
 librarysys/
 ├── bookmap/
 │   ├── migrations/
