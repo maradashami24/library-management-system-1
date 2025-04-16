@@ -68,8 +68,3 @@ MySQL Workbench (or MySQL server installed locally)
 7. **Run Development Server**
     ```bash
     python manage.py runserver
-
-
-
-
-
